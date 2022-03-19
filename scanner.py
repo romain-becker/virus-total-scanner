@@ -1,5 +1,8 @@
+from multiprocessing.connection import wait
 import os
 import hashlib
+from time import sleep
+from urllib import response
 import requests
 import json
 import sys
@@ -33,11 +36,14 @@ for item in files_in_dir:
           bytes = f.read() # read entire file as bytes
           readable_hash = hashlib.sha256(bytes).hexdigest();
           List.append(str(readable_hash)) 
-          #print(List)
           
-apikey = config['APIKEY']
 
-for readable_hash in List:
+apikey = config['APIKEY']
+numberOfFiles = len(List)  
+
+
+def apiCall():
+  for readable_hash in List:
     sys.stdout.write(BOLD)
     print("[SHA-256]")
     sys.stdout.write(RESET)
@@ -47,6 +53,8 @@ for readable_hash in List:
               "x-apikey": apikey
              }
     response = requests.get(url, headers=header)
+    if numberOfFiles >= 4:
+        sleep(15)
     for item in files_in_dir:
       report = json.loads(response.text)
     try:  
@@ -103,4 +111,4 @@ for readable_hash in List:
     except:
       print('FILE NOT FOUND')
 
-  
+apiCall()
