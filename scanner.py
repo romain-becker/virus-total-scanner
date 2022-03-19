@@ -15,12 +15,18 @@ config = dotenv_values(".env")
 location = config['PATH']
 files_in_dir = []
 
+sys.stdout.write(BOLD)
+print("[FILES TO SCAN]")
+sys.stdout.write(RESET)
 
 # r:root, d:directories, f:files
 for r, d, f in os.walk(location):
-   for item in f:
-      files_in_dir.append(os.path.join(r, item))
-   
+  for item in f:
+    print(item)
+    files_in_dir.append(os.path.join(r, item))
+
+print("\n")
+
 List = []
 
 for item in files_in_dir:
@@ -32,20 +38,22 @@ for item in files_in_dir:
           
 apikey = config['APIKEY']
 
-
 for readable_hash in List:
+    sys.stdout.write(BOLD)
+    print("[SHA-256]")
+    sys.stdout.write(RESET)
+    print(readable_hash)
     url = "https://www.virustotal.com/api/v3/files/" + str(readable_hash)  
     header = {"Accept": "application/json",
               "x-apikey": apikey
              }
     response = requests.get(url, headers=header)
     for item in files_in_dir:
-      print(item)
-    report = json.loads(response.text)
+      report = json.loads(response.text)
     try:  
       report['data']
       sys.stdout.write(BOLD)
-      print("\n[Last_analysis_stats] ")
+      print("\n[LAST ANALYSIS STATS] ")
       sys.stdout.write(RESET)
       print("harmless: ", end="")
       sys.stdout.write(GREEN)
@@ -81,7 +89,7 @@ for readable_hash in List:
       sys.stdout.write(RESET)
       print("\n")
       sys.stdout.write(BOLD)
-      print("[Total_votes] ")
+      print("[TOTAL VOTES] ")
       sys.stdout.write(RESET)
       print("harmless: ", end="")
       sys.stdout.write(GREEN)
@@ -97,6 +105,3 @@ for readable_hash in List:
       print('FILE NOT FOUND')
 
   
-
-
-
