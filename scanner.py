@@ -14,6 +14,7 @@ from decouple import config
 from dotenv import dotenv_values
 config = dotenv_values(".env")
 
+apikey = config['APIKEY']
 location = config['PATH']
 files_in_dir = []
 
@@ -29,7 +30,9 @@ for r, d, f in os.walk(location):
 
 print("\n")
 
+
 List = []
+
 
 for item in files_in_dir:
     with open(item,"rb") as f:
@@ -38,12 +41,11 @@ for item in files_in_dir:
           List.append(str(readable_hash)) 
           
 
-apikey = config['APIKEY']
+
 numberOfFiles = len(List)  
 
 
-def apiCall():
-  for readable_hash in List:
+for readable_hash in List:
     sys.stdout.write(BOLD)
     print("[SHA-256]")
     sys.stdout.write(RESET)
@@ -111,4 +113,4 @@ def apiCall():
     except:
       print('FILE NOT FOUND')
 
-apiCall()
+
