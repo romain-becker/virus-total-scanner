@@ -1,3 +1,4 @@
+from logging import exception
 from multiprocessing.connection import wait
 import os
 import hashlib
@@ -7,16 +8,15 @@ import requests
 import json
 import sys
 from colors import *
-
-
 from decouple import config
-
 from dotenv import dotenv_values
+
 config = dotenv_values(".env")
 
 apikey = config['APIKEY']
 location = config['PATH']
 files_in_dir = []
+List = []
 
 sys.stdout.write(BOLD)
 print("[FILES TO SCAN]")
@@ -31,16 +31,12 @@ for r, d, f in os.walk(location):
 print("\n")
 
 
-List = []
-
-
 for item in files_in_dir:
     with open(item,"rb") as f:
           bytes = f.read() # read entire file as bytes
           readable_hash = hashlib.sha256(bytes).hexdigest();
           List.append(str(readable_hash)) 
           
-
 
 numberOfFiles = len(List)  
 
@@ -55,6 +51,7 @@ for readable_hash in List:
               "x-apikey": apikey
              }
     response = requests.get(url, headers=header)
+    # print(response.status_code, response.reason)
     if numberOfFiles >= 4:
         sleep(15)
     for item in files_in_dir:
@@ -109,8 +106,36 @@ for readable_hash in List:
       print(report['data']['attributes']['total_votes']['malicious'])
       sys.stdout.write(RESET)
       print("\n")
-
     except:
-      print('FILE NOT FOUND')
+      if response.status_code == 404: 
+        # print(response.status_code)
+        url = "https://www.virustotal.com/api/v3/files/" + str(readable_hash) + "/analyse"
+        headers = { 
+            "Accept": "application/json",
+            "x-apikey": "6173a41d7f5e0973fe7e60783bdc9ee7fc96d63a2d97e6dd104b295730757c13"
+          }
+        response2 = requests.request("POST", url, headers=headers)
+        if response2.status_code == 200:
+          print(response2.text)
+        if response2.status_code == 404:
+          print('ERROR')
+
+
+ 
+
+
+
+
+
+
+
+
+  
+  
+     
+    
+       
+        
+    
 
 
