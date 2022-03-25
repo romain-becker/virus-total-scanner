@@ -119,23 +119,3 @@ for readable_hash in List:
           print(response2.text)
         if response2.status_code == 404:
           print('ERROR')
-
-
- 
-
-
-
-
-
-
-
-
-  
-  
-     
-    
-       
-        
-    
-
-
