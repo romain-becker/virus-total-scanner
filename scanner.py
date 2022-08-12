@@ -112,7 +112,7 @@ for readable_hash in List:
         url = "https://www.virustotal.com/api/v3/files/" + str(readable_hash) + "/analyse"
         headers = { 
             "Accept": "application/json",
-            "x-apikey": "6173a41d7f5e0973fe7e60783bdc9ee7fc96d63a2d97e6dd104b295730757c13"
+            "x-apikey": apikey
           }
         response2 = requests.request("POST", url, headers=headers)
         if response2.status_code == 200:
